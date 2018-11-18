@@ -5,7 +5,7 @@
 #include <string>
 #include <algorithm>
 
-using namespace std;
+using namespace std; //Program only uses standard namespace so made global
 
 #define MAX_WORD_SIZE 10
 #define GUESSES 10
@@ -13,17 +13,19 @@ using namespace std;
 int main(int argc, char* argv[]){
 
 	int selection, wordLength, i, numberOfGuesses, validInput, toASCII;
-	std::string alphabet = "abcdefghijklmnopqrstuvwxyz";
+	string alphabet = "abcdefghijklmnopqrstuvwxyz";
 	char input, round, toCompare;
     bool guess;
-	std::ifstream inputFile;
-	std::string wordRead, selectedWord;
+	ifstream inputFile;
+	string wordRead, selectedWord;
 
 	
+	//Checking argument count
    if(argc > 2){
 		cout << "Too Many Arguments - Exiting";
-		exit (EXIT_FAILURE);
+		exit (EXIT_FAILURE); 
     }
+	//Checking for extra file to be used as word list
     else if(argc == 2){
         srand(time(0));
 		inputFile.open(argv[1]);
@@ -32,6 +34,7 @@ int main(int argc, char* argv[]){
 			exit(1);
 		}
     }
+	//Uses included wordlist
 	else{
         srand(time(0));
 		inputFile.open("wordlist.txt");
@@ -40,19 +43,20 @@ int main(int argc, char* argv[]){
 			exit(1);
 		}
 	}
-	 std::vector<std::string> words;
+	 vector<std::string> words;
 	while (std::getline(inputFile, wordRead)){
 		words.push_back(wordRead);
 	}	
+	//Chooses random word from array of words
 	selection = rand() % 6;
 	selectedWord = words.at(selection);
-	std::string guessed(selectedWord);
-	std::string availableLetters(alphabet);
+	string guessed(selectedWord); 
+	string availableLetters(alphabet);
 	wordLength = selectedWord.length();
 	numberOfGuesses = GUESSES;
 	validInput = 0;
 	cout << "The word has " << wordLength << " letters\n";
-    for(i = 0; i < wordLength; i++){
+    for(i = 0; i < wordLength; i++){  //Creates list of - of length of selected word
 				guessed[i] = '-' ;
             }
 	while(true){ 
@@ -79,7 +83,8 @@ int main(int argc, char* argv[]){
 						guess = true;
 						cout << input << " is in the word\n\n\n";
 						toASCII = input;
-						for(i = 0; i < 26; i++){
+						//Swaps letter in both word and available alphabet with -
+						for(i = 0; i < 26; i++){ 
 							toCompare = availableLetters[i];
 							if(toASCII == toCompare){
 								availableLetters[i] = '-';
@@ -88,6 +93,7 @@ int main(int argc, char* argv[]){
 					}
                     
                 }
+				//Removes letter from letters guessed if not found in word
                 if(!guess){
                     numberOfGuesses--;
 					cout << input << " is not in word\n\n";
@@ -108,7 +114,9 @@ int main(int argc, char* argv[]){
 				cout << "You lost the word was " << selectedWord << "\n";
 				break;
 			}
+			
         }
+		//Reset game for second round
 		numberOfGuesses = 0;
 		cout << "Play again? Input Y for another round or input any other key to quit\n";
 		fflush(stdin);
